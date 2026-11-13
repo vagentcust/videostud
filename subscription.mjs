@@ -1,0 +1,4 @@
+// Port of the user's V-Agent-Telegram-Bot/handlers.py, check_subscription.
+export function isMember(m){return ['member','administrator','creator'].includes(m?.status)||(m?.status==='restricted'&&m.is_member===true);}
+export async function checkSubscription(api,userId,channelId){if(!channelId)return {subscribed:false,error:'Канал подписки не настроен.'};try{return {subscribed:isMember(await api('getChatMember',{chat_id:channelId,user_id:userId})),error:null};}catch{return {subscribed:false,error:'Не удалось проверить подписку. Бот должен быть администратором канала. Попробуй позже.'};}}
+export function subscriptionMenu(env=process.env){return {inline_keyboard:[[{text:'Подписаться на канал',url:env.CHANNEL_URL||'https://t.me/vagentai',icon_custom_emoji_id:'5877465816030515018'}],[{text:'Проверить подписку',callback_data:'subscription:check',icon_custom_emoji_id:'5825794181183836432'}]]};}
